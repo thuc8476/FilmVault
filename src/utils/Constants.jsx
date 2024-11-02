@@ -1,9 +1,10 @@
-import { FaImages, FaStar, FaUserFriends, FaComments } from 'react-icons/fa';
+import { FaImages, FaStar, FaUserFriends, FaComments, FaListAlt, FaFilm } from 'react-icons/fa';
+
 export const menu = [
     {
         id: 1,
         title: "Media Management",
-        icon: <FaImages className=" text-gray-500" />,
+        icon: <FaImages />,
         items: [
             { id: 1, title: "Movie", path: "/media_management/movie" },
             { id: 2, title: "Episode", path: "/media_management/episode" },
@@ -13,7 +14,7 @@ export const menu = [
     {
         id: 2,
         title: "Vip",
-        icon: <FaStar className=" text-gray-500" />,
+        icon: <FaStar />,
         items: [
             { id: 1, title: "Package", path: "/vip/package" },
             { id: 2, title: "Feature", path: "/vip/feature" },
@@ -23,7 +24,7 @@ export const menu = [
     {
         id: 3,
         title: "Cast & Crew",
-        icon: <FaUserFriends className=" text-gray-500" />,
+        icon: <FaUserFriends />,
         items: [
             { id: 1, title: "Author", path: "/cast_crew/author" },
             { id: 2, title: "Character", path: "/cast_crew/character" },
@@ -33,7 +34,7 @@ export const menu = [
     {
         id: 4,
         title: "Engagement Pages",
-        icon: <FaComments className=" text-gray-500" />,
+        icon: <FaComments />,
         items: [
             { id: 1, title: "Like", path: "/engagement_pages/like" },
             { id: 2, title: "Watchlist", path: "/engagement_pages/watchlist" },

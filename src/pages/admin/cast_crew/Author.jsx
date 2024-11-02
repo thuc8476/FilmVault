@@ -1,11 +1,11 @@
 import React from 'react';
 
-function CastCrew(props) {
+function Author(props) {
     return (
         <div>
-            <h1>CastCrew</h1>
+            <h1>Author</h1>
         </div>
     );
 }
 
-export default CastCrew;
+export default Author;
