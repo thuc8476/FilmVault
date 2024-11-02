@@ -39,13 +39,13 @@ function Categories(props) {
     const [editMode, setEditMode] = useState(false);
     const handleOpenAdd = () => {
         setEditMode(false); // Đặt modal ở chế độ thêm mới
-        setEditRow({ nameCategories: '', description: '' }); // Xóa nội dung cũ
+        setEditRow({ nameCategories: '', description: '' }); 
         setOpen(true);
     };
 
     const handleOpenEdit = (row) => {
-        setEditMode(true); // Đặt modal ở chế độ chỉnh sửa
-        setEditRow(row); // Gán giá trị danh mục cần sửa
+        setEditMode(true); 
+        setEditRow(row); 
         setOpen(true);
     };
 
@@ -139,11 +139,11 @@ function Categories(props) {
                     sx={{
                         minWidth: 650,
                         '@media (max-width: 1024px)': {
-                            minWidth: 400, // Reduce width for tablets
-                            fontSize: '0.875rem', // Smaller font size for compact look
+                            minWidth: 400, 
+                            fontSize: '0.875rem',
                         },
                         '@media (max-width: 600px)': {
-                            display: 'block', // Stack layout on mobile
+                            display: 'block',
                             overflowX: 'auto',
                         }
                     }}
@@ -155,7 +155,7 @@ function Categories(props) {
                             <TableCell>Name Categories</TableCell>
                             <TableCell
                                 sx={{
-                                    display: { xs: 'none', sm: 'table-cell' }, // Hide on very small screens
+                                    display: { xs: 'none', sm: 'table-cell' }, 
                                 }}
                             >
                                 Description
@@ -175,7 +175,7 @@ function Categories(props) {
                                 <TableCell>{row.nameCategories}</TableCell>
                                 <TableCell
                                     sx={{
-                                        display: { xs: 'none', sm: 'table-cell' }, // Hide on very small screens
+                                        display: { xs: 'none', sm: 'table-cell' }, 
                                     }}
                                 >
                                     {row.description}
