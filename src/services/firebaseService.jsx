@@ -51,19 +51,21 @@ export const deleteDocument = async (collectionName, docId, imgUrl) => {
 };
 
 
-export const updateDocument = async (collectionName, docId, values, imgUpload, oldImgUrl) => {
-  if (imgUpload) {
-    const storageRef = ref(storage, `${collectionName}/${uuidv4()}`);
-    await uploadBytes(storageRef, imgUpload);
-    const imgUrl = await getDownloadURL(storageRef);
-    values.imgUrl = imgUrl;
+export const updateDocument = async (collectionName, values, imgUpload, oldImgUrl) => {
+  // Tách id ra khỏi newValues
+  const { id, ...updatedValues } = values;
+ if (imgUpload) {
+   const storageRef = ref(storage, `${collectionName}/${uuidv4()}`);
+   await uploadBytes(storageRef, imgUpload);
+   const imgUrl = await getDownloadURL(storageRef);
+   values.imgUrl = imgUrl;
 
-    // Delete the old image if it exists
-    if (oldImgUrl) {
-      const oldFilename = oldImgUrl.split('%2F').pop().split('?').shift();
-      const oldImgRef = ref(storage, `${collectionName}/${oldFilename}`);
-      await deleteObject(oldImgRef);
-    }
-  }
-  await updateDoc(doc(collection(db, collectionName), docId), values);
+   // Delete the old image if it exists
+   if (oldImgUrl) {
+     const oldFilename = oldImgUrl.split('%2F').pop().split('?').shift();
+     const oldImgRef = ref(storage, `${collectionName}/${oldFilename}`);
+     await deleteObject(oldImgRef);
+   }
+ }
+ await updateDoc(doc(collection(db, collectionName), values.id), updatedValues);
 };

@@ -26,17 +26,15 @@ function Categories(props) {
     const categories = useContext(ContextCategories);
     const [openDelete, setOpenDelete] = useState(false);
     const [categoryToDelete, setCategoryToDelete] = useState(null);
-    const [isEditing, setIsEditing] = useState(false);
-    const [editCategoryId, setEditCategoryId] = useState(null);
 
     const handleAddCategory = async () => {
-        if (!validate()) return; // Kiểm tra hợp lệ trước khi thêm
+        if (!validate()) return; 
         try {
             await addDocument('Categories', category);
             setSnackbarMessage('Danh mục đã được thêm thành công!');
             setSnackbarSeverity('success');
             setSnackbarOpen(true);
-            setCategory(intern); // Reset lại form
+            setCategory(intern);
             setOpen(false);
         } catch (error) {
             console.error("Error adding document: ", error);
@@ -52,15 +50,14 @@ function Categories(props) {
     const handleDeleteConfirm = async () => {
         if (categoryToDelete) {
             try {
-                // Gọi deleteDocument với imgUrl nếu cần
-                await deleteDocument("Categories", categoryToDelete.id, categoryToDelete.imgUrl); // Thêm imgUrl nếu có
+                await deleteDocument("Categories", categoryToDelete.id, categoryToDelete.imgUrl); 
                 setSnackbarMessage('Danh mục đã được xóa thành công!');
                 setSnackbarSeverity('success');
                 setSnackbarOpen(true);
                 setOpenDelete(false);
-                setCategoryToDelete(null); // Đặt lại danh mục cần xóa
+                setCategoryToDelete(null); 
             } catch (error) {
-                console.error("Error deleting document: ", error); // Ghi lại lỗi nếu có
+                console.error("Error deleting document: ", error); 
                 setSnackbarMessage('Có lỗi xảy ra khi xóa danh mục.');
                 setSnackbarSeverity('error');
                 setSnackbarOpen(true);
@@ -72,8 +69,8 @@ function Categories(props) {
         if (!validate()) return;
 
         try {
-            if (isEditing) {
-                await updateDocument("Categories", editCategoryId, category);
+            if (category.id) {
+                await updateDocument("Categories", category);
                 setSnackbarMessage('Danh mục đã được cập nhật thành công!');
             } else {
                 await addDocument("Categories", category);
@@ -101,8 +98,10 @@ function Categories(props) {
         setCategory({ ...category, [name]: value });
     }
     const handleOpenAdd = () => {
+        setCategory(intern);
+        setErrors(intern);
         setOpen(true);
-    }
+    };
     const handleClose = () => {
         setOpen(false)
     }
@@ -111,9 +110,7 @@ function Categories(props) {
         setSnackbarOpen(false);
     };
     const handleEditOpen = (category) => {
-        setCategory({ nameCategory: category.nameCategory, description: category.description });
-        setEditCategoryId(category.id);
-        setIsEditing(true);
+        setCategory(category);
         setOpen(true);
     };
 
@@ -171,7 +168,7 @@ function Categories(props) {
                     <Modal open={open} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
                         <Box sx={style}>
                             <Typography id="modal-title" variant="h6" component="h2">
-                                {isEditing ? 'Edit Category' : 'Add Category'}
+                                {category?.id ? 'Edit Category' : 'Add Category'}
                             </Typography>
                             <TextField
                                 label="Name"
@@ -195,7 +192,7 @@ function Categories(props) {
                                 helperText={errors.description}
                             />
                             <Button onClick={handleSubmit} variant="contained" color="primary" style={{ marginTop: '16px' }}>
-                                {isEditing ? 'Edit Category' : 'Add Category'}
+                                {category?.id ? 'Edit Category' : 'Add Category'}
                             </Button>
                         </Box>
                     </Modal>
