@@ -2,7 +2,17 @@ import React from 'react';
 import { IoMdMail } from "react-icons/io";
 import { FaSearch, FaBell } from "react-icons/fa";
 import AdminRouters from '../../../routes/AdminRouters';
-
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 function Main(props) {
     return (
         <main className="flex-1 bg-gray-50 py-5 px-8">
