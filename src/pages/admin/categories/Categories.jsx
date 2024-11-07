@@ -1,10 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography, Box, Modal, TextField, Button, InputAdornment, Snackbar, Alert } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Search as SearchIcon } from '@mui/icons-material';
-import { addDocument, deleteDocument } from '../../../services/firebaseService';
+import { addDocument, deleteDocument, updateDocument } from '../../../services/firebaseService';
 import { ContextCategories } from "../../../context/CategoriesProvider";
-import ModalDelete from '../../../components/Modaldetele';
-
+import ModalDelete from '../../../components/Modaldetele'
 const style = {
     position: 'absolute',
     top: '50%',
@@ -27,6 +26,8 @@ function Categories(props) {
     const categories = useContext(ContextCategories);
     const [openDelete, setOpenDelete] = useState(false);
     const [categoryToDelete, setCategoryToDelete] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editCategoryId, setEditCategoryId] = useState(null);
 
     const handleAddCategory = async () => {
         if (!validate()) return; // Kiểm tra hợp lệ trước khi thêm
@@ -66,6 +67,28 @@ function Categories(props) {
             }
         }
     };
+
+    const handleSubmit = async () => {
+        if (!validate()) return;
+
+        try {
+            if (isEditing) {
+                await updateDocument("Categories", editCategoryId, category);
+                setSnackbarMessage('Danh mục đã được cập nhật thành công!');
+            } else {
+                await addDocument("Categories", category);
+                setSnackbarMessage('Danh mục đã được thêm thành công!');
+            }
+            setSnackbarSeverity('success');
+            setSnackbarOpen(true);
+            handleClose();
+        } catch (error) {
+            console.error("Error:", error);
+            setSnackbarMessage('Có lỗi xảy ra khi thực hiện thao tác.');
+            setSnackbarSeverity('error');
+            setSnackbarOpen(true);
+        }
+    };
     const validate = () => {
         const newErrors = { ...errors };
         newErrors.nameCategory = category.nameCategory ? '' : ' name is reguired';
@@ -87,7 +110,12 @@ function Categories(props) {
     const handleSnackbarClose = () => {
         setSnackbarOpen(false);
     };
-
+    const handleEditOpen = (category) => {
+        setCategory({ nameCategory: category.nameCategory, description: category.description });
+        setEditCategoryId(category.id);
+        setIsEditing(true);
+        setOpen(true);
+    };
 
     return (
 
@@ -143,7 +171,7 @@ function Categories(props) {
                     <Modal open={open} onClose={handleClose} aria-labelledby="modal-title" aria-describedby="modal-description">
                         <Box sx={style}>
                             <Typography id="modal-title" variant="h6" component="h2">
-                                Add Category
+                                {isEditing ? 'Edit Category' : 'Add Category'}
                             </Typography>
                             <TextField
                                 label="Name"
@@ -166,8 +194,8 @@ function Categories(props) {
                                 error={Boolean(errors.description)}
                                 helperText={errors.description}
                             />
-                            <Button onClick={handleAddCategory} variant="contained" color="primary" style={{ marginTop: '16px' }}>
-                                Add Category
+                            <Button onClick={handleSubmit} variant="contained" color="primary" style={{ marginTop: '16px' }}>
+                                {isEditing ? 'Edit Category' : 'Add Category'}
                             </Button>
                         </Box>
                     </Modal>
@@ -221,7 +249,7 @@ function Categories(props) {
                                     {row.description}
                                 </TableCell>
                                 <TableCell>
-                                    <IconButton color="primary">
+                                    <IconButton onClick={() => handleEditOpen(row)} color="primary">
                                         <EditIcon />
                                     </IconButton>
                                     <IconButton onClick={() => handleDeleteOpen(row)} color="secondary">
