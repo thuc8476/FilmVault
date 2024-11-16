@@ -1,9 +1,10 @@
 import React, { useState, useContext } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography, Box, Modal, TextField, Button, InputAdornment, Snackbar, Alert } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography, Box, Modal, TextField, Button, InputAdornment, Snackbar, Alert, TablePagination } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Search as SearchIcon } from '@mui/icons-material';
 import { addDocument, deleteDocument, updateDocument } from '../../../services/firebaseService';
 import { ContextCategories } from "../../../context/CategoriesProvider";
-import ModalDelete from '../../../components/Modaldetele'
+import ModalDelete from '../../../components/Modaldetele';
+import { useNotification } from "../../../context/NotificationContext";
 const style = {
     position: 'absolute',
     top: '50%',
@@ -20,29 +21,27 @@ function Categories(props) {
     const [open, setOpen] = useState(false);
     const [category, setCategory] = useState(intern);
     const [errors, setErrors] = useState(intern);
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
     const categories = useContext(ContextCategories);
     const [openDelete, setOpenDelete] = useState(false);
     const [categoryToDelete, setCategoryToDelete] = useState(null);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [searchTerm, setSearchTerm] = useState('');
+    const showNotification = useNotification();
+    const filteredCategories = categories.filter(category =>
+        (category.nameCategory && category.nameCategory.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (category.description && category.description.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
 
-    const handleAddCategory = async () => {
-        if (!validate()) return; 
-        try {
-            await addDocument('Categories', category);
-            setSnackbarMessage('Danh mục đã được thêm thành công!');
-            setSnackbarSeverity('success');
-            setSnackbarOpen(true);
-            setCategory(intern);
-            setOpen(false);
-        } catch (error) {
-            console.error("Error adding document: ", error);
-            setSnackbarMessage('Có lỗi xảy ra khi thêm danh mục.');
-            setSnackbarSeverity('error');
-            setSnackbarOpen(true);
-        }
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
     };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
     const handleDeleteOpen = (category) => {
         setCategoryToDelete(category);
         setOpenDelete(true);
@@ -50,40 +49,29 @@ function Categories(props) {
     const handleDeleteConfirm = async () => {
         if (categoryToDelete) {
             try {
-                await deleteDocument("Categories", categoryToDelete.id, categoryToDelete.imgUrl); 
-                setSnackbarMessage('Danh mục đã được xóa thành công!');
-                setSnackbarSeverity('success');
-                setSnackbarOpen(true);
+                await deleteDocument("Categories", categoryToDelete.id);
+                showNotification('Category deleted successfully!', "error");
                 setOpenDelete(false);
-                setCategoryToDelete(null); 
+                setCategoryToDelete(null);
             } catch (error) {
-                console.error("Error deleting document: ", error); 
-                setSnackbarMessage('Có lỗi xảy ra khi xóa danh mục.');
-                setSnackbarSeverity('error');
-                setSnackbarOpen(true);
+                console.error("Error deleting document: ", error);
             }
         }
     };
 
     const handleSubmit = async () => {
         if (!validate()) return;
-
         try {
             if (category.id) {
                 await updateDocument("Categories", category);
-                setSnackbarMessage('Danh mục đã được cập nhật thành công!');
+                showNotification('Category updated successfully!', "info");
             } else {
                 await addDocument("Categories", category);
-                setSnackbarMessage('Danh mục đã được thêm thành công!');
+                showNotification('Category added successfully!', "success");
             }
-            setSnackbarSeverity('success');
-            setSnackbarOpen(true);
             handleClose();
         } catch (error) {
             console.error("Error:", error);
-            setSnackbarMessage('Có lỗi xảy ra khi thực hiện thao tác.');
-            setSnackbarSeverity('error');
-            setSnackbarOpen(true);
         }
     };
     const validate = () => {
@@ -106,16 +94,13 @@ function Categories(props) {
         setOpen(false)
     }
 
-    const handleSnackbarClose = () => {
-        setSnackbarOpen(false);
-    };
     const handleEditOpen = (category) => {
         setCategory(category);
         setOpen(true);
     };
+    const currentRows = filteredCategories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     return (
-
         <div style={{ textAlign: 'center', marginBottom: '16px' }}>
             <div className='flex flex-col md:flex-row justify-between items-center mb-4'>
                 <Typography
@@ -134,18 +119,22 @@ function Categories(props) {
                     <TextField
                         variant="outlined"
                         placeholder="Enter keywords..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <SearchIcon style={{ color: '#999' }} />
                                 </InputAdornment>
                             ),
+                            style: { height: '40px' }
                         }}
                         style={{
                             backgroundColor: '#fff',
                             borderRadius: '4px 0 0 4px',
                             width: '100%',
-                            maxWidth: '400px',
+                            maxWidth: '250px',
+                            height: '40px'
                         }}
                     />
                     <Button
@@ -155,7 +144,7 @@ function Categories(props) {
                             color: '#fff',
                             minWidth: '50px',
                             borderRadius: '0 4px 4px 0',
-                            height: '56px',
+                            height: '40px',
                         }}
                     >
                         <SearchIcon />
@@ -177,7 +166,7 @@ function Categories(props) {
                                 name='nameCategory'
                                 value={category.nameCategory}
                                 onChange={handleInput}
-                                error={Boolean(errors.description)}
+                                error={!!errors.description}
                                 helperText={errors.description}
 
                             />
@@ -188,7 +177,7 @@ function Categories(props) {
                                 name='description'
                                 value={category.description}
                                 onChange={handleInput}
-                                error={Boolean(errors.description)}
+                                error={!!errors.description}
                                 helperText={errors.description}
                             />
                             <Button onClick={handleSubmit} variant="contained" color="primary" style={{ marginTop: '16px' }}>
@@ -200,58 +189,24 @@ function Categories(props) {
             </div>
 
             <TableContainer component={Paper}>
-                <Table
-                    sx={{
-                        minWidth: 650,
-                        '@media (max-width: 1024px)': {
-                            minWidth: 400,
-                            fontSize: '0.875rem',
-                        },
-                        '@media (max-width: 600px)': {
-                            display: 'block',
-                            overflowX: 'auto',
-                        }
-                    }}
-                    aria-label="simple table"
-                >
+                <Table aria-label="simple table">
                     <TableHead>
                         <TableRow>
                             <TableCell>#</TableCell>
                             <TableCell>Name Categories</TableCell>
-                            <TableCell
-                                sx={{
-                                    display: { xs: 'none', sm: 'table-cell' },
-                                }}
-                            >
-                                Description
-                            </TableCell>
+                            <TableCell>Description</TableCell>
                             <TableCell>Action</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {categories.map((row, index) => (
-                            <TableRow
-                                key={row.id}
-                                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                            >
-                                <TableCell component="th" scope="row">
-                                    {index + 1}
-                                </TableCell>
+                        {currentRows.map((row, index) => (
+                            <TableRow key={row.id}>
+                                <TableCell>{index + 1}</TableCell>
                                 <TableCell>{row.nameCategory}</TableCell>
-                                <TableCell
-                                    sx={{
-                                        display: { xs: 'none', sm: 'table-cell' },
-                                    }}
-                                >
-                                    {row.description}
-                                </TableCell>
+                                <TableCell>{row.description}</TableCell>
                                 <TableCell>
-                                    <IconButton onClick={() => handleEditOpen(row)} color="primary">
-                                        <EditIcon />
-                                    </IconButton>
-                                    <IconButton onClick={() => handleDeleteOpen(row)} color="secondary">
-                                        <DeleteIcon />
-                                    </IconButton>
+                                    <IconButton onClick={() => handleEditOpen(row)} color="primary"><EditIcon /></IconButton>
+                                    <IconButton onClick={() => handleDeleteOpen(row)} color="secondary"><DeleteIcon /></IconButton>
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -259,19 +214,17 @@ function Categories(props) {
                 </Table>
             </TableContainer>
 
+            <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={categories.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+            />
 
-            {/* Snackbar */}
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={4000}
-                onClose={handleSnackbarClose}
-                anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-            >
-                <Alert severity={snackbarSeverity} sx={{ width: '100%' }}>
-                    {snackbarMessage}
-                </Alert>
-            </Snackbar>
-            <ModalDelete openDelete={openDelete} setOpenDelete={setOpenDelete} onDeleteConfirm={handleDeleteConfirm} categoryName={categoryToDelete?.nameCategory} ></ModalDelete>
+            <ModalDelete openDelete={openDelete} setOpenDelete={setOpenDelete} onDeleteConfirm={handleDeleteConfirm} categoryName={categoryToDelete?.nameCategory} />
         </div>
 
 

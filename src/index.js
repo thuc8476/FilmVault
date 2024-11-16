@@ -5,15 +5,30 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { CategoriesProvider } from './context/CategoriesProvider';
+import { ActorsProvider } from './context/ActorContext';
+import { NotificationProvider } from './context/NotificationContext';
+import { AuthorsProvider } from './context/AuthorsContext';
+import { CharactersProvider } from './context/Characters';
+import { PlansProvider } from './context/PlansContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <BrowserRouter>
-       <CategoriesProvider>
-       <App />
-       </CategoriesProvider>
-    </BrowserRouter>
+    <NotificationProvider>
+      <BrowserRouter>
+        <CategoriesProvider>
+          <ActorsProvider>
+            <AuthorsProvider>
+              <CharactersProvider>
+                <PlansProvider>
+                  <App />
+                </PlansProvider>
+              </CharactersProvider>
+            </AuthorsProvider>
+          </ActorsProvider>
+        </CategoriesProvider>
+      </BrowserRouter>
+    </NotificationProvider>
   </React.StrictMode>
 );
 

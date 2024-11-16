@@ -3,17 +3,14 @@ import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc, onSnapshot, que
 import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 import { db, storage } from "../config/firebase";
 import { v4 as uuidv4 } from "uuid";
-
+import { uploadImageToCloudinary, deleteImageFromCloudinary } from "../config/Cloudinary";
 
 // Thêm tài liệu mới vào một bộ sưu tập cụ thể với tùy chọn tải lên hình ảnh
-export const addDocument = async (collectionName, values, imgUpload) => {
+export const addDocument = async (collectionName, values) => {
   try {
-    if (imgUpload) {
-      const storageRef = ref(storage, `${collectionName}/${uuidv4()}`);
-      await uploadBytes(storageRef, imgUpload);
-      const imgUrl = await getDownloadURL(storageRef);
-      values.imgUrl = imgUrl; // Lưu URL vào đối tượng values
-      console.log(values);
+    if (values.imgUrl) {
+      const imgUrl = await uploadImageToCloudinary(values.imgUrl,collectionName);
+      values.imgUrl = imgUrl;
     }
     await addDoc(collection(db, collectionName), values);
   } catch (error) {
@@ -38,16 +35,17 @@ export const fetchDocumentsRealtime = (collectionName, callback) => {
   // Hàm trả về unsubscribe để có thể dừng lắng nghe khi không cần nữa
   return unsubscribe;
 };
-// Delete a document from a given collection and its associated image
 export const deleteDocument = async (collectionName, docId, imgUrl) => {
-  await deleteDoc(doc(collection(db, collectionName), docId));
-
-  // Delete the associated image if it exists
-  if (imgUrl) {
-    const filename = imgUrl.split('%2F').pop().split('?').shift();
-    const imgRef = ref(storage, `${collectionName}/${filename}`);
-    await deleteObject(imgRef);
+  // Xóa ảnh trên Cloudinary nếu tồn tại
+  if (imgUrl && imgUrl.includes('cloudinary.com')) {
+    // Lấy `public_id` từ URL của Cloudinary
+    const publicId = imgUrl
+      .split('/').slice(-2).join('/')  // Lấy thư mục và tên file từ URL
+      .replace(/\.[^/.]+$/, '');       // Loại bỏ phần mở rộng file (ví dụ: .jpg, .png)
+    await deleteImageFromCloudinary(publicId);
   }
+// Xóa tài liệu khỏi Firestore
+await deleteDoc(doc(collection(db, collectionName), docId));
 };
 
 
