@@ -1,10 +1,10 @@
 import React, { useState, useContext } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography, Box, Modal, TextField, Button, InputAdornment, Snackbar, Alert, TablePagination } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography, Box, Modal, TextField, Button, InputAdornment,  TablePagination } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Search as SearchIcon } from '@mui/icons-material';
 import { addDocument, deleteDocument, updateDocument } from '../../../services/firebaseService';
 import { ContextCategories } from "../../../context/CategoriesProvider";
 import ModalDelete from '../../../components/Modaldetele';
-import { useNotification } from "../../../context/NotificationContext";
+import { useNotification } from "../../../context/NotificationProvider";
 const style = {
     position: 'absolute',
     top: '50%',
@@ -28,6 +28,21 @@ function Categories(props) {
     const [rowsPerPage, setRowsPerPage] = useState(5);
     const [searchTerm, setSearchTerm] = useState('');
     const showNotification = useNotification();
+    const handleSubmit = async () => {
+        if (!validate()) return;
+        try {
+            if (category.id) {
+                await updateDocument("Categories", category);
+                showNotification('Category updated successfully!', "info");
+            } else {
+                await addDocument("Categories", category);
+                showNotification('Category added successfully!', "success");
+            }
+            handleClose();
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    };
     const filteredCategories = categories.filter(category =>
         (category.nameCategory && category.nameCategory.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (category.description && category.description.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -59,21 +74,7 @@ function Categories(props) {
         }
     };
 
-    const handleSubmit = async () => {
-        if (!validate()) return;
-        try {
-            if (category.id) {
-                await updateDocument("Categories", category);
-                showNotification('Category updated successfully!', "info");
-            } else {
-                await addDocument("Categories", category);
-                showNotification('Category added successfully!', "success");
-            }
-            handleClose();
-        } catch (error) {
-            console.error("Error:", error);
-        }
-    };
+   
     const validate = () => {
         const newErrors = { ...errors };
         newErrors.nameCategory = category.nameCategory ? '' : ' name is reguired';

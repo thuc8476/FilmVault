@@ -8,8 +8,8 @@ import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Search as Searc
 import { IoMdPhotos } from 'react-icons/io';
 import { addDocument, deleteDocument, updateDocument } from '../../../services/firebaseService';
 import ModalDelete from '../../../components/Modaldetele';
-import { ContextCharacters } from '../../../context/Characters'
-import { useNotification } from "../../../context/NotificationContext";
+import { ContextCharacters } from '../../../context/CharactersProvider'
+import { useNotification } from "../../../context/NotificationProvider";
 
 
 

@@ -1,10 +1,11 @@
 import React, { useState, useContext } from 'react';
+
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography, Box, Modal, TextField, Button, InputAdornment, TablePagination } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Search as SearchIcon } from '@mui/icons-material';
 import { addDocument, deleteDocument, updateDocument } from '../../../services/firebaseService';
-import { ContextPlans } from "../../../context/PlansContext";
+import { ContextPlans } from "../../../context/PlansProvider";
 import ModalDelete from '../../../components/Modaldetele';
-import { useNotification } from "../../../context/NotificationContext";
+import { useNotification } from "../../../context/NotificationProvider";
 const style = {
     position: 'absolute',
     top: '50%',
@@ -23,7 +24,7 @@ function Plans(props) {
     const [open, setOpen] = useState(false);
     const [plan, setPlan] = useState(initialPlan);
     const [errors, setErrors] = useState(initialPlan);
-    const plans = useContext(ContextPlans); // Dùng context để lấy dữ liệu kế hoạch
+    const plans = useContext(ContextPlans);
     const [openDelete, setOpenDelete] = useState(false);
     const [planToDelete, setPlanToDelete] = useState(null);
     const [page, setPage] = useState(0);

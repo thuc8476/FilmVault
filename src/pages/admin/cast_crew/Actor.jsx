@@ -8,8 +8,8 @@ import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Search as Searc
 import { IoMdPhotos } from 'react-icons/io';
 import { addDocument, deleteDocument, updateDocument } from '../../../services/firebaseService';
 import ModalDelete from '../../../components/Modaldetele';
-import { ContextActors } from "../../../context/ActorContext";
-import { useNotification } from "../../../context/NotificationContext";
+import { ContextActors } from "../../../context/ActorsProvider";
+import { useNotification } from "../../../context/NotificationProvider";
 
 const logo = "https://media.istockphoto.com/id/1313644269/vector/gold-and-silver-circle-star-logo-template.jpg?s=612x612&w=0&k=20&c=hDqCI9qTkNqNcKa6XS7aBim7xKz8cZbnm80Z_xiU2DI=";
 const initialActor = { name: '', description: '', imgUrl: logo };
@@ -49,7 +49,7 @@ function Actor() {
 
     const handleDeleteConfirm = async () => {
         try {
-            await deleteDocument('Actors', actorToDelete.id , actorToDelete.imgUrl);
+            await deleteDocument('Actors', actorToDelete.id, actorToDelete.imgUrl);
             setOpenDelete(false);
         } catch (error) {
         }
@@ -86,6 +86,13 @@ function Actor() {
     const currentRows = filteredActors.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
 
     const handleClose = () => setOpen(false);
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
 
     return (
         <div style={{ textAlign: 'center', marginBottom: '16px' }}>
@@ -159,7 +166,7 @@ function Actor() {
                                 <TableCell colSpan={5} align="center">No actors found</TableCell>
                             </TableRow>
                         ) : (
-                            currentRows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((actor, index) => (
+                            currentRows.map((actor, index) => (
                                 <TableRow key={actor.id}>
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>
@@ -189,10 +196,9 @@ function Actor() {
                 count={actors.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
-                onPageChange={(e, newPage) => setPage(newPage)}
-                onRowsPerPageChange={(e) => setRowsPerPage(parseInt(e.target.value, 10))}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
             />
-
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>{actor.id ? 'Edit Actor' : 'Add Actor'}</DialogTitle>
                 <DialogContent>
@@ -248,7 +254,7 @@ function Actor() {
                 </DialogActions>
             </Dialog>
 
-            <ModalDelete openDelete={openDelete} setOpenDelete={setOpenDelete}  onDeleteConfirm={handleDeleteConfirm} actorName={actorToDelete?.name} />
+            <ModalDelete openDelete={openDelete} setOpenDelete={setOpenDelete} onDeleteConfirm={handleDeleteConfirm} actorName={actorToDelete?.name} />
         </div>
     );
 }

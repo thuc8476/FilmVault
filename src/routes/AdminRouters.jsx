@@ -5,7 +5,7 @@ import Comment from '../pages/admin/engagement_pages/Comment';
 import Like from '../pages/admin/engagement_pages/Like';
 import Watchlist from '../pages/admin/engagement_pages/Watchlist';
 import Episode from '../pages/admin/media_management/Episode';
-import Movie from '../pages/admin/media_management/Movie';
+import Movie from '../pages/admin/media_management/movie/Movie';
 import Trailer from '../pages/admin/media_management/Trailer';
 import Profile from '../pages/admin/profile/Profile'
 import UserPages from '../pages/admin/uses_pages/UserPages'

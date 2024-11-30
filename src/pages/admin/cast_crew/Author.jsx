@@ -2,9 +2,9 @@ import React, { useState, useContext, } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography, Box, Modal, TextField, Button, InputAdornment, TablePagination } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Search as SearchIcon } from '@mui/icons-material';
 import { addDocument, deleteDocument, updateDocument } from '../../../services/firebaseService';
-import { useNotification } from "../../../context/NotificationContext";
+import { useNotification } from "../../../context/NotificationProvider";
 import ModalDelete from '../../../components/Modaldetele';
-import { ContextAuthors } from '../../../context/AuthorsContext'
+import { ContextAuthors } from '../../../context/AuthorsProvider'
 const style = {
     position: 'absolute',
     top: '50%',

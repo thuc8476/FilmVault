@@ -1,4 +1,4 @@
-import { FaImages, FaStar, FaUserFriends, FaComments, FaListAlt, FaFilm } from 'react-icons/fa';
+import { FaImages, FaStar, FaUserFriends, FaComments} from 'react-icons/fa';
 
 export const menu = [
     {

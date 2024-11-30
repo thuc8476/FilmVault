@@ -5,11 +5,13 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import { CategoriesProvider } from './context/CategoriesProvider';
-import { ActorsProvider } from './context/ActorContext';
-import { NotificationProvider } from './context/NotificationContext';
-import { AuthorsProvider } from './context/AuthorsContext';
-import { CharactersProvider } from './context/Characters';
-import { PlansProvider } from './context/PlansContext';
+import { ActorsProvider } from './context/ActorsProvider';
+import { NotificationProvider } from './context/NotificationProvider';
+import { AuthorsProvider } from './context/AuthorsProvider';
+import { CharactersProvider } from './context/CharactersProvider';
+import { PlansProvider } from './context/PlansProvider';
+import { MoviesProvider } from './context/MovieProvider';
+import { EpisodeProvider } from './context/EpisodeProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -21,7 +23,11 @@ root.render(
             <AuthorsProvider>
               <CharactersProvider>
                 <PlansProvider>
-                  <App />
+                  <MoviesProvider>
+                    <EpisodeProvider>
+                    <App />
+                    </EpisodeProvider>                   
+                  </MoviesProvider>
                 </PlansProvider>
               </CharactersProvider>
             </AuthorsProvider>
