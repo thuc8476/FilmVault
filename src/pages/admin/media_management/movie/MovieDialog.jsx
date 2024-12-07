@@ -4,9 +4,9 @@ import { FaTimes } from 'react-icons/fa';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import MdCategory from '@mui/icons-material/Category';
-import { FaUserAlt, FaMask, FaImage } from 'react-icons/fa';
+import { FaUserAlt, FaImage } from 'react-icons/fa';
 import Avatar from '@mui/material/Avatar';
-import { Dialog, DialogTitle,Autocomplete, DialogContent, DialogActions, Grid, Paper, TextField, FormControl, InputLabel, Select, MenuItem, Button, Stack } from '@mui/material';
+import { Dialog, DialogTitle, Autocomplete, DialogContent, DialogActions, Grid, Paper, TextField, FormControl, InputLabel, Select, MenuItem, Button, Stack } from '@mui/material';
 import { ContextAuthors } from '../../../../context/AuthorsProvider';
 import { ContextPlans } from '../../../../context/PlansProvider';
 import { ContextCategories } from '../../../../context/CategoriesProvider';
@@ -22,7 +22,6 @@ function MovieDialog({ open, handleClose, handleChoose, movie, handleSelect, han
   const handleDelete = (item, type) => {
     handleSelect(item, type);
   }
-
   return (
     < Dialog open={open} onClose={handleClose} sx={{ '& .MuiDialog-paper': { width: '80%', maxWidth: 'none' } }}>
       <DialogTitle>{movie.id ? 'Edit Moive' : 'Add Movie'}</DialogTitle>
@@ -210,7 +209,8 @@ function MovieDialog({ open, handleClose, handleChoose, movie, handleSelect, han
                   <Avatar
                     src={movie.imgUrl}
                     alt="Actor Image"
-                    sx={{ width: 120, height: 120, margin: '10px auto' }} />
+                    sx={{ width: 120, height: 200, margin: '10px auto', borderRadius: 2 }}
+                  />
                 </div>
               </Stack>
             </Paper>

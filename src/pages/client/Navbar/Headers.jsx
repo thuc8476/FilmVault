@@ -1,50 +1,113 @@
 import React, { useState } from 'react';
 import { HiOutlineMenu, HiX } from 'react-icons/hi';
-
+import Login from '../Navbar/Login';
+import Signing from '../Navbar/Signing'
+import { useAuth } from "../../../context/AuthsProvider";
+import MenuItem from '@mui/material/MenuItem';
+import { Link } from 'react-router-dom';
+import { TextField, InputAdornment, IconButton } from '@mui/material';
+import { AiOutlineSearch } from 'react-icons/ai';
 const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [open, setOpen] = useState(false);
+    const [signup, setSignup] = useState(false);
+    const { user, logout } = useAuth();
     return (
-        <header className="bg-black text-white">
-            <div className="container mx-auto flex items-center justify-between p-4">
-                <button
-                    className="md:hidden border-white focus:outline-none mr-4"
-                    onClick={() => setIsMenuOpen(!isMenuOpen)}
-                >
-                    {isMenuOpen ? (<HiX className="h-8 w-8" />) : (<HiOutlineMenu className="h-8 w-8"/>)}
-                </button>
+        <>
+            <Login open={open} setSignup={setSignup} setOpen={setOpen} />
+            <Signing signup={signup} setSignup={setSignup} setOpen={setOpen} />
+            <header className="bg-gradient-to-r from-gray-900 via-black to-gray-900 text-white shadow-md">
+                <div className="container mx-auto flex items-center justify-between py-4 px-6 relative">
+                    <button
+                        className="md:hidden text-white focus:outline-none"
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    >
+                        {isMenuOpen ? <HiX className="h-8 w-8" /> : <HiOutlineMenu className="h-8 w-8" />}
+                    </button>
+                    <div className="absolute left-1/2 transform -translate-x-1/2 md:static md:transform-none">
+                        <img src="/images/logo.png" alt="FilmVault" className="h-10" />
+                    </div>
+                    <nav className="hidden md:flex space-x-8 justify-center">
+                        <Link to={"/"}>
+                            <li className="text-gray-300 hover:text-white transition duration-300 list-none">Trang chủ</li>
+                        </Link>
+                        <li className="text-gray-300 hover:text-white transition duration-300 list-none">Kho Phim</li>
+                        <li className="text-gray-300 hover:text-white transition duration-300 list-none">Phim Bộ</li>
+                        <li className="text-gray-300 hover:text-white transition duration-300 list-none">Phim Thuê</li>
+                        <li className="text-gray-300 hover:text-white transition duration-300 list-none">Blog</li>
+                        <Link to={"/Support"}>
+                            <li className="text-gray-300 hover:text-white transition duration-300 list-none">Hỗ Trợ</li>
+                        </Link>
+                    </nav>
 
-                <div className="flex items-center">
-                    <span className="ml-2 text-lg font-bold">Galaxy Play</span>
+                    <div className="relative">
+                        {user ? (
+                            <div className="flex items-center space-x-4">
+                                <TextField
+                                    variant="outlined"
+                                    size="small"
+                                    placeholder="Search"
+                                    InputProps={{
+                                        className: "bg-black text-white rounded-md",
+                                        style: { color: "#fff" },
+                                        startAdornment: (
+                                            <InputAdornment position="start">
+                                                <AiOutlineSearch style={{ color: "#ccc" }} />
+                                            </InputAdornment>
+                                        ),
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                                <IconButton
+                                                    style={{ color: "#ccc" }}
+                                                >
+                                                </IconButton>
+                                            </InputAdornment>
+                                        ),
+                                    }}
+                                    className="w-48 md:w-64"
+                                />
+                                <div className="relative group">
+                                    <img
+                                        src={user.avatar || "/images/avatar.jpg"}
+                                        alt={user.username}
+                                        className="h-10 w-10 rounded-full object-cover border-2 border-gray-300 cursor-pointer"
+                                    />
+                                    <div className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                        <div className="p-2 border-b border-gray-200">
+                                            <MenuItem className="font-semibold">{user.username}</MenuItem>
+                                            <MenuItem>Profile</MenuItem>
+                                            <MenuItem>My account</MenuItem>
+                                            <MenuItem onClick={logout}>Logout</MenuItem>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <button
+                                onClick={() => setOpen(true)}
+                                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition"
+                            >
+                                Đăng Nhập
+                            </button>
+                        )}
+                    </div>
                 </div>
-                <nav className="hidden md:flex space-x-6">
-                    <ul className="flex space-x-6">
-                        <li className="text-gray-500 hover:text-white transition-colors duration-300">Trang chủ</li>
-                        <li className="text-gray-500 hover:text-white transition-colors duration-300">Kho Phim</li>
-                        <li className="text-gray-500 hover:text-white transition-colors duration-300">Phim Điện Ảnh</li>
-                        <li className="text-gray-500 hover:text-white transition-colors duration-300">Phim Bộ</li>
-                        <li className="text-gray-500 hover:text-white transition-colors duration-300">Phim Thuê</li>
-                        <li className="text-gray-500 hover:text-white transition-colors duration-300">Khuyến Mãi</li>
-                        <li className="text-gray-500 hover:text-white transition-colors duration-300">Blog</li>
-                        <li className="text-gray-500 hover:text-white transition-colors duration-300">Hỗ Trợ</li>
-                    </ul>
-                </nav>
-                <button className="px-4 py-2 border-2 border-white text-white rounded-lg hover:bg-white hover:text-black hover:border-black">
-                    Đăng Nhập
-                </button>
-            </div>
-            {isMenuOpen && (
-                <div className="md:hidden bg-black text-white text-center">
-                    <a href="#" className="block px-4 py-2 hover:bg-gray-700">Trang chủ</a>
-                    <a href="#" className="block px-4 py-2 hover:bg-gray-700">Kho Phim</a>
-                    <a href="#" className="block px-4 py-2 hover:bg-gray-700">Phim Điện Ảnh</a>
-                    <a href="#" className="block px-4 py-2 hover:bg-gray-700">Phim Bộ</a>
-                    <a href="#" className="block px-4 py-2 hover:bg-gray-700">Phim Thuê</a>
-                    <a href="#" className="block px-4 py-2 hover:bg-gray-700">Khuyến Mãi</a>
-                    <a href="#" className="block px-4 py-2 hover:bg-gray-700">Blog</a>
-                    <a href="#" className="block px-4 py-2 hover:bg-gray-700">Hỗ Trợ</a>
-                </div>
-            )}
-        </header>
+                {isMenuOpen && (
+                    <div className="md:hidden bg-black text-white py-4 space-y-2 text-center">
+                        <li href="#" className="block px-4 py-2 hover:bg-gray-700">Trang chủ</li>
+                        <li href="#" className="block px-4 py-2 hover:bg-gray-700">Kho Phim</li>
+                        <li href="#" className="block px-4 py-2 hover:bg-gray-700">Phim Bộ</li>
+                        <li href="#" className="block px-4 py-2 hover:bg-gray-700">Phim Thuê</li>
+                        <li href="#" className="block px-4 py-2 hover:bg-gray-700">Blog</li>
+                        <li href="#" className="block px-4 py-2 hover:bg-gray-700">Hỗ Trợ</li>
+                    </div>
+                )}
+            </header>
+
+
+        </>
+
     );
 };
+
 export default Header;

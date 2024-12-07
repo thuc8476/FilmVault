@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography, Box, Modal, TextField, Button, InputAdornment,  TablePagination } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography, Box, Modal, TextField, Button, InputAdornment, TablePagination } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Search as SearchIcon } from '@mui/icons-material';
 import { addDocument, deleteDocument, updateDocument } from '../../../services/firebaseService';
 import { ContextCategories } from "../../../context/CategoriesProvider";
@@ -73,8 +73,6 @@ function Categories(props) {
             }
         }
     };
-
-   
     const validate = () => {
         const newErrors = { ...errors };
         newErrors.nameCategory = category.nameCategory ? '' : ' name is reguired';

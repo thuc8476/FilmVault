@@ -12,12 +12,16 @@ import { CharactersProvider } from './context/CharactersProvider';
 import { PlansProvider } from './context/PlansProvider';
 import { MoviesProvider } from './context/MovieProvider';
 import { EpisodeProvider } from './context/EpisodeProvider';
+import { AuthsProvider } from './context/AuthsProvider';
+import { AccountsProvider } from './context/AccountProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <NotificationProvider>
       <BrowserRouter>
+      <AuthsProvider>
+        <AccountsProvider>
         <CategoriesProvider>
           <ActorsProvider>
             <AuthorsProvider>
@@ -33,6 +37,8 @@ root.render(
             </AuthorsProvider>
           </ActorsProvider>
         </CategoriesProvider>
+        </AccountsProvider>      
+      </AuthsProvider>
       </BrowserRouter>
     </NotificationProvider>
   </React.StrictMode>

@@ -10,7 +10,7 @@ import Tooltip from '@mui/material/Tooltip';
 import { LiaUsersSolid } from "react-icons/lia";
 import InfoIcon from '@mui/icons-material/Info';
 import { FaPlus, } from 'react-icons/fa';
-import { TextField, Typography, Paper, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputAdornment } from '@mui/material';
+import { TextField, Typography, Paper, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputAdornment, TablePagination } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ModalChoose from '../../../../components/ModalChoose';
 import { ContextCategories } from '../../../../context/CategoriesProvider';
@@ -38,6 +38,7 @@ const inner = {
 };
 function Movie(props) {
     const [open, setOpen] = useState(false);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
     const [openChoose, setOpenChoose] = useState(false);
     const [dataChoose, setDataChoose] = useState([]);
     const [chooseType, setChooseType] = useState("");
@@ -51,6 +52,19 @@ function Movie(props) {
     const plans = useContext(ContextPlans);
     const [openDelete, setOpenDelete] = useState(false);
     const [movieToDelete, setMovieToDelete] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [page, setPage] = useState(0);
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+    const filteredCategories = movies.filter(movie =>
+        (movie.nameMovie && movie.nameMovie.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -158,6 +172,7 @@ function Movie(props) {
                 return [];
         }
     };
+    const currentRows = filteredCategories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
     return (
         <div>
             <div className='flex flex-col md:flex-row justify-between items-center mb-4'>
@@ -177,6 +192,8 @@ function Movie(props) {
                     <TextField
                         variant="outlined"
                         placeholder="Enter keywords..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -240,7 +257,7 @@ function Movie(props) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {movies.map((row, index) => (
+                        {currentRows.map((row, index) => (
                             <TableRow key={row.id}>
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell><img src={row.imgUrl} alt={row.nameMovie} style={{ width: 50, height: 50 }} /></TableCell>
@@ -287,6 +304,16 @@ function Movie(props) {
                     </TableBody>
                 </Table>
             </TableContainer>
+
+            <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={movies.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+            />
 
             <ModalChoose selectedItems={getSelectedItems()} onSelect={handleSelect} chooseType={chooseType} openChoose={openChoose} dataChoose={dataChoose} setOpenChoose={setOpenChoose} />
             <ModalDelete openDelete={openDelete} setOpenDelete={setOpenDelete} onDeleteConfirm={handleDeleteConfirm} movieToDelete={movieToDelete?.nameMovie} />
