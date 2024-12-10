@@ -1,9 +1,8 @@
 import React, { useState, useContext } from "react";
 import { addDocument } from "../../../services/firebaseService";
-import { Modal, Box } from "@mui/material";
+import { Modal, Box, CircularProgress } from "@mui/material";
 import { ContextAccounts } from "../../../context/AccountProvider";
 import { useNotification } from "../../../context/NotificationProvider";
-
 import { AiFillGoogleCircle, AiFillGithub } from "react-icons/ai";
 
 const modalStyle = {
@@ -17,15 +16,13 @@ const modalStyle = {
   p: 4,
   width: "400px",
 };
-
-const intern = { email: "", username: "", password: "", confirmPassWord: "" };
-
+const intern = { email: "", username: "", password: "", confirmPassWord: "", imgUrl: "" };
 function Signing({ signup, setSignup, setOpen }) {
   const [account, setAccount] = useState(intern);
   const [error, setError] = useState(intern);
+  const [isLoading, setIsLoading] = useState(false);
   const accounts = useContext(ContextAccounts);
   const showNotification = useNotification();
-
   const validate = () => {
     const newErrors = { ...error };
     newErrors.username = account.username ? "" : "Tên đăng nhập là bắt buộc";
@@ -34,31 +31,42 @@ function Signing({ signup, setSignup, setOpen }) {
       account.confirmPassWord === account.password
         ? ""
         : "Xác nhận mật khẩu không khớp";
-
     if (accounts?.some((acc) => acc.username === account.username)) {
       newErrors.username = "Tên đăng nhập đã tồn tại";
     }
     setError(newErrors);
     return Object.values(newErrors).every((error) => error === "");
   };
-
   const handleSubmit = async () => {
     if (!validate()) return;
-
     try {
-      const { confirmPassWord, ...accountData } = account; // Loại bỏ confirmPassWord
-      await addDocument("Accounts", accountData); // Lưu các trường cần thiết
-      showNotification("Signing added successfully!", "success");
+      setIsLoading(true);
+      const { confirmPassWord, ...accountData } = account;
+      await addDocument("Accounts", accountData);
+      showNotification("Tài khoản đã được đăng ký thành công!", "success");
       handleClose();
     } catch (error) {
       console.error("Error:", error);
       showNotification("Có lỗi xảy ra khi đăng ký. Vui lòng thử lại.", "error");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleInput = (event) => {
     const { name, value } = event.target;
     setAccount({ ...account, [name]: value });
+  };
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAccount({ ...account, imgUrl: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleClose = () => {
@@ -72,10 +80,9 @@ function Signing({ signup, setSignup, setOpen }) {
       <Box sx={modalStyle}>
         <h2 className="text-2xl font-bold text-center text-gray-800">Đăng Ký</h2>
         <form className="mt-4">
+
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Email
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Email</label>
             <input
               type="email"
               name="email"
@@ -84,14 +91,12 @@ function Signing({ signup, setSignup, setOpen }) {
               className="w-full px-3 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Nhập email"
             />
-            {error.email && (
-              <p className="mt-1 text-sm text-red-500">{error.email}</p>
-            )}
+            {error.email && <p className="mt-1 text-sm text-red-500">{error.email}</p>}
           </div>
+
+
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Tên đăng nhập
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Tên đăng nhập</label>
             <input
               type="text"
               name="username"
@@ -100,14 +105,12 @@ function Signing({ signup, setSignup, setOpen }) {
               className="w-full px-3 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Nhập tên đăng nhập"
             />
-            {error.username && (
-              <p className="mt-1 text-sm text-red-500">{error.username}</p>
-            )}
+            {error.username && <p className="mt-1 text-sm text-red-500">{error.username}</p>}
           </div>
+
+
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Mật khẩu
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Mật khẩu</label>
             <input
               type="password"
               name="password"
@@ -116,14 +119,12 @@ function Signing({ signup, setSignup, setOpen }) {
               className="w-full px-3 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Nhập mật khẩu"
             />
-            {error.password && (
-              <p className="mt-1 text-sm text-red-500">{error.password}</p>
-            )}
+            {error.password && <p className="mt-1 text-sm text-red-500">{error.password}</p>}
           </div>
+
+
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Xác nhận mật khẩu
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Xác nhận mật khẩu</label>
             <input
               type="password"
               name="confirmPassWord"
@@ -132,16 +133,38 @@ function Signing({ signup, setSignup, setOpen }) {
               className="w-full px-3 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Xác nhận mật khẩu"
             />
-            {error.confirmPassWord && (
-              <p className="mt-1 text-sm text-red-500">{error.confirmPassWord}</p>
+            {error.confirmPassWord && <p className="mt-1 text-sm text-red-500">{error.confirmPassWord}</p>}
+          </div>
+
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Ảnh đại diện (Tùy chọn)</label>
+
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              className="w-full px-3 py-2 mt-1 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+
+            {account.imgUrl && (
+              <div className="mt-2 flex justify-center">
+                <img
+                  src={account.imgUrl}
+                  alt="Avatar Preview"
+                  className="w-20 h-20 rounded-full border-2 border-gray-300"
+                />
+              </div>
             )}
           </div>
+
           <button
             type="button"
             onClick={handleSubmit}
-            className="w-full px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+            className="w-full flex justify-center items-center px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+            disabled={isLoading}
           >
-            Đăng Ký
+            {isLoading ? <CircularProgress size={24} color="inherit" /> : "Đăng Ký"}
           </button>
         </form>
         <div className="my-4 text-center text-gray-500">Hoặc đăng ký với</div>
@@ -159,10 +182,7 @@ function Signing({ signup, setSignup, setOpen }) {
           Đã có tài khoản?{" "}
           <a
             href="#"
-            onClick={() => {
-              setOpen(true);
-              setSignup(false);
-            }}
+            onClick={() => { setOpen(true); setSignup(false); }}
             className="text-blue-500 hover:underline"
           >
             Đăng Nhập

@@ -3,7 +3,6 @@ import { Modal, Box } from "@mui/material";
 import { ContextAccounts } from "../../../context/AccountProvider";
 import { useAuth } from "../../../context/AuthsProvider";
 import { AiFillGoogleCircle, AiFillGithub } from "react-icons/ai";
-
 const modalStyle = {
   position: "absolute",
   top: "50%",
@@ -15,14 +14,11 @@ const modalStyle = {
   p: 4,
   width: "400px",
 };
-
 const intern = { usernameOrEmail: "", password: "" };
-
-function Login({ open, setSignup, setOpen }) {
-  const [account, setAccount] = useState(intern); // Trạng thái mặc định
-  const accounts = useContext(ContextAccounts); // Lấy danh sách tài khoản
-  const { login } = useAuth(); // Hàm login từ AuthContext
-
+function Login({ open, setSignup, setOpen, setOpenForgetPassword, }) {
+  const [account, setAccount] = useState(intern);
+  const accounts = useContext(ContextAccounts);
+  const { login } = useAuth();
   const handleLogin = () => {
     const isLogin = accounts.find(
       (acc) =>
@@ -30,12 +26,11 @@ function Login({ open, setSignup, setOpen }) {
           acc.username === account.usernameOrEmail) &&
         acc.password === account.password
     );
-
     if (isLogin) {
-      login(isLogin); // Lưu trạng thái đăng nhập
-      setOpen(false); // Đóng modal
+      login(isLogin);
+      setOpen(false);
     } else {
-      alert("Thông tin đăng nhập không đúng!"); // Hiển thị lỗi
+      alert("Thông tin đăng nhập không đúng!");
     }
   };
 
@@ -43,7 +38,6 @@ function Login({ open, setSignup, setOpen }) {
     const { name, value } = event.target;
     setAccount({ ...account, [name]: value });
   };
-
   return (
     <Modal open={open} onClose={() => setOpen(false)}>
       <Box sx={modalStyle}>
@@ -85,7 +79,10 @@ function Login({ open, setSignup, setOpen }) {
             Đăng Nhập
           </button>
           <div className="flex items-center justify-between mt-4">
-            <a href="#" className="text-sm text-blue-500 hover:underline">
+            <a onClick={() => {
+              setOpen(false); // Đóng Login modal
+              setOpenForgetPassword(true); // Mở ForgetPassword modal
+            }} href="#" className="text-sm text-blue-500 hover:underline">
               Quên mật khẩu?
             </a>
           </div>
@@ -103,11 +100,10 @@ function Login({ open, setSignup, setOpen }) {
         </div>
         <p className="mt-6 text-sm text-center text-gray-500">
           Chưa có tài khoản?{" "}
-          <a
-            href="#"
-            onClick={() => setSignup(true)}
-            className="text-blue-500 hover:underline"
-          >
+          <a onClick={() => {
+            setOpen(false); // Đóng Login modal
+            setSignup(true); // Mở Signup modal
+          }} href="#" className="text-blue-500 hover:underline">
             Đăng ký ngay
           </a>
         </p>
@@ -115,5 +111,4 @@ function Login({ open, setSignup, setOpen }) {
     </Modal>
   );
 }
-
 export default Login;

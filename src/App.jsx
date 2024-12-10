@@ -7,8 +7,8 @@ import Home from './pages/client/Home/Home';
 function App() {
   return (
     <div className="App">
-      {/* <AdminDashboard/> */}
-      <Home/>
+      <AdminDashboard/>
+      {/* <Home/> */}
     </div>
   );
 }

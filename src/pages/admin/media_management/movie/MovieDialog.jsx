@@ -1,4 +1,4 @@
-// src/components/MovieDialog.jsx
+
 import React, { useContext } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import Typography from '@mui/material/Typography';

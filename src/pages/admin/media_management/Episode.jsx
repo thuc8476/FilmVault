@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography,Box, Modal, TextField, Button, InputAdornment, TablePagination,Autocomplete} from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography, Box, Modal, TextField, Button, InputAdornment, TablePagination, Autocomplete } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Search as SearchIcon } from '@mui/icons-material';
 import { addDocument, deleteDocument, updateDocument } from '../../../services/firebaseService';
 import { ContextEpisodes } from "../../../context/EpisodeProvider";
@@ -173,7 +173,7 @@ function Episodes() {
                             onChange={handleInput}
                             error={!!errors.episodeURL}
                             helperText={errors.episodeURL}
-                        />   
+                        />
                         <Autocomplete
                             options={movies} // Danh sách các bộ phim
                             getOptionLabel={(option) => option.nameMovie} // Hiển thị tên phim

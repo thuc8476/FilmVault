@@ -8,7 +8,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { MdLocalMovies, } from 'react-icons/md';
 import Tooltip from '@mui/material/Tooltip';
 import { LiaUsersSolid } from "react-icons/lia";
-import InfoIcon from '@mui/icons-material/Info';
 import { FaPlus, } from 'react-icons/fa';
 import { TextField, Typography, Paper, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, InputAdornment, TablePagination } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -133,7 +132,6 @@ function Movie(props) {
         }
         setOpenChoose(true);
     };
-    console.log(movie);
 
     const handleSelect = (item, type) => {
         setMovie(prevData => {
