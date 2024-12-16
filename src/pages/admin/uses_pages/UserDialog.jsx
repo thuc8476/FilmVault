@@ -5,16 +5,12 @@ import Avatar from '@mui/material/Avatar';
 import { Button } from '@mui/material';
 import { FaImage } from 'react-icons/fa';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
-import { ContextAccounts } from "../../../context/AccountProvider";
 import { InputAdornment, IconButton } from '@mui/material';
 import { ROLES } from '../../../utils/Constants';
 import { FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material';
-import { FormControl, InputLabel, Select, FormHelperText } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
-function UserDialog({ open, handleClose, account, handleInput, handleSubmit, handleImageChange,}) {
-    const accounts = useContext(ContextAccounts);
+import { FormControl, InputLabel, Select } from '@mui/material';
+function UserDialog({ open, handleClose, account, handleInput, handleSubmit, handleImageChange, }) {
     const [showPassword, setShowPassword] = useState(false);
-    
     const toggleShowPassword = () => {
         setShowPassword(!showPassword);
     };
@@ -22,7 +18,7 @@ function UserDialog({ open, handleClose, account, handleInput, handleSubmit, han
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>  </DialogTitle>
             <DialogContent>
-                <h2 className="text-2xl font-bold text-center mb-4">Thêm Người Dùng</h2>
+                <h2 className="text-2xl font-bold text-center mb-4">Edit user information</h2>
                 <form className="space-y-4">
                     <Box className="mt-3" display="flex" alignItems="center">
                         <input
@@ -52,6 +48,13 @@ function UserDialog({ open, handleClose, account, handleInput, handleSubmit, han
                     </div>
                     <TextField
                         fullWidth
+                        label="FullName"
+                        name="fullName"
+                        value={account.fullName}
+                        onChange={handleInput}
+                    />
+                    <TextField
+                        fullWidth
                         label="Email"
                         name="email"
                         value={account.email}
@@ -62,7 +65,7 @@ function UserDialog({ open, handleClose, account, handleInput, handleSubmit, han
                     />
                     <TextField
                         fullWidth
-                        label="Tên đăng nhập"
+                        label="UserName"
                         name="username"
                         value={account.username}
                         onChange={handleInput}
@@ -74,7 +77,7 @@ function UserDialog({ open, handleClose, account, handleInput, handleSubmit, han
                         <TextField
                             fullWidth
                             required
-                            label="Mật khẩu"
+                            label="PassWord"
                             name="password"
                             type={showPassword ? 'text' : 'password'}
                             value={account.password}
@@ -90,7 +93,6 @@ function UserDialog({ open, handleClose, account, handleInput, handleSubmit, han
                             }}
                         />
                     </Box>
-
                     <FormControl fullWidth>
                         <FormLabel>Giới tính</FormLabel>
                         <RadioGroup
@@ -104,11 +106,9 @@ function UserDialog({ open, handleClose, account, handleInput, handleSubmit, han
                             <FormControlLabel value="other" control={<Radio />} label="Khác" />
                         </RadioGroup>
                     </FormControl>
-
-
                     <TextField
                         fullWidth
-                        label="Số điện thoại"
+                        label="Phone number"
                         name="phone"
                         value={account.phone}
                         onChange={handleInput}
@@ -131,14 +131,12 @@ function UserDialog({ open, handleClose, account, handleInput, handleSubmit, han
                             ))}
                         </Select>
                     </FormControl>
-
                     <button
                         type="button"
                         onClick={handleSubmit}
                         className="w-full flex justify-center items-center px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
-                      
                     >
-                     Sửa thông tin người dùng
+                        confirm edit user
                     </button>
                 </form>
             </DialogContent>

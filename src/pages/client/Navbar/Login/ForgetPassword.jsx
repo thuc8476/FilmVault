@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { Modal, Box, CircularProgress } from "@mui/material";
-import { ContextAccounts } from "../../../context/AccountProvider";
-import { useNotification } from "../../../context/NotificationProvider";
+import { ContextAccounts } from "../../../../context/AccountProvider";
+import { useNotification } from "../../../../context/NotificationProvider";
 
 const modalStyle = {
     position: "absolute",
@@ -87,7 +87,7 @@ function ForgetPassword({ open, setOpen, setOpenForgetPassword }) {
                     <button
                         type="button"
                         onClick={handleSubmit}
-                        className="w-full flex justify-center items-center px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+                        className="w-full flex justify-center items-center px-4 py-2 bg-[#FF5733] hover:bg-[#E64A2E] text-white rounded-md transition"
                         disabled={isLoading}
                     >
                         {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Gửi Yêu Cầu'}
@@ -99,7 +99,7 @@ function ForgetPassword({ open, setOpen, setOpenForgetPassword }) {
                                 setOpen(true);
                                 setOpenForgetPassword(false);
                             }}
-                            className="text-blue-500 hover:underline"
+                            className="px-4 py-2 bg-[#FF5733] hover:bg-[#E64A2E] text-white rounded-md transition"
                         >
                             Đăng Nhập
                         </button>

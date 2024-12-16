@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Logo Section */}
           <div>
-            <h2 className="text-xl font-bold mb-2">FilmVault</h2>
+            <img src="/images/logo.png" alt="FilmVault" className="h-10" />
             <p>Your ultimate movie database.</p>
           </div>
 

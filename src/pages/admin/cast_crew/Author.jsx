@@ -197,7 +197,11 @@ function Author(props) {
                             <TableRow key={row.id}>
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell>{row.nameAuthor}</TableCell>
-                                <TableCell>{row.description}</TableCell>
+                                <TableCell>
+                                    {row.description.split(" ").length > 10
+                                        ? row.description.split(" ").slice(0, 10).join(" ") + "..."
+                                        : row.description}
+                                </TableCell>
                                 <TableCell>
                                     <IconButton onClick={() => handleEditOpen(row)} color="primary"><EditIcon /></IconButton>
                                     <IconButton onClick={() => handleDeleteOpen(row)} color="secondary"><DeleteIcon /></IconButton>

@@ -52,7 +52,7 @@ function Character(props) {
 
     const handleDeleteConfirm = async () => {
         try {
-            await deleteDocument('Characters', characterToDelete.id , characterToDelete.imgUrl);
+            await deleteDocument('Characters', characterToDelete.id, characterToDelete.imgUrl);
             showNotification('Actor added successfully!', "success");
             setOpenDelete(false);
         } catch (error) {
@@ -169,7 +169,11 @@ function Character(props) {
                                         <Avatar src={character.imgUrl || 'https://via.placeholder.com/150'} alt={character.name} />
                                     </TableCell>
                                     <TableCell>{character.name}</TableCell>
-                                    <TableCell>{character.description}</TableCell>
+                                    <TableCell>
+                                        {character.description.split(" ").length > 10
+                                            ? character.description.split(" ").slice(0, 10).join(" ") + "..."
+                                            : character.description}
+                                    </TableCell>
                                     <TableCell>
                                         <IconButton onClick={() => handleEditOpen(character)} color="primary">
                                             <EditIcon />

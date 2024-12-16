@@ -260,7 +260,11 @@ function Movie(props) {
                                 <TableCell>{index + 1}</TableCell>
                                 <TableCell><img src={row.imgUrl} alt={row.nameMovie} style={{ width: 50, height: 50 }} /></TableCell>
                                 <TableCell>{row.nameMovie}</TableCell>
-                                <TableCell>{row.description}</TableCell>
+                                <TableCell>
+                                    {row.description.split(" ").length > 10
+                                        ? row.description.split(" ").slice(0, 10).join(" ") + "..."
+                                        : row.description}
+                                </TableCell>
                                 <TableCell>{row.duration}</TableCell>
                                 <TableCell>{getObjectById(row.authorID, authors)?.nameAuthor}</TableCell>
                                 <TableCell>{getObjectById(row.plan, plans)?.title}</TableCell>

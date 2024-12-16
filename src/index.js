@@ -14,31 +14,37 @@ import { MoviesProvider } from './context/MovieProvider';
 import { EpisodeProvider } from './context/EpisodeProvider';
 import { AuthsProvider } from './context/AuthsProvider';
 import { AccountsProvider } from './context/AccountProvider';
+import { PackagesProvider } from './context/PackageProvider';
+import { FeaturesProvider } from './context/FeaturesProvider';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <NotificationProvider>
       <BrowserRouter>
-      <AuthsProvider>
         <AccountsProvider>
-        <CategoriesProvider>
-          <ActorsProvider>
-            <AuthorsProvider>
-              <CharactersProvider>
-                <PlansProvider>
-                  <MoviesProvider>
-                    <EpisodeProvider>
-                    <App />
-                    </EpisodeProvider>                   
-                  </MoviesProvider>
-                </PlansProvider>
-              </CharactersProvider>
-            </AuthorsProvider>
-          </ActorsProvider>
-        </CategoriesProvider>
-        </AccountsProvider>      
-      </AuthsProvider>
+          <AuthsProvider>
+            <FeaturesProvider>
+              <CategoriesProvider>
+                <ActorsProvider>
+                  <AuthorsProvider>
+                    <CharactersProvider>
+                      <PlansProvider>
+                        <MoviesProvider>
+                          <EpisodeProvider>
+                            <PackagesProvider>
+                              <App />
+                            </PackagesProvider>
+                          </EpisodeProvider>
+                        </MoviesProvider>
+                      </PlansProvider>
+                    </CharactersProvider>
+                  </AuthorsProvider>
+                </ActorsProvider>
+              </CategoriesProvider>
+            </FeaturesProvider>
+          </AuthsProvider>
+        </AccountsProvider>
       </BrowserRouter>
     </NotificationProvider>
   </React.StrictMode>

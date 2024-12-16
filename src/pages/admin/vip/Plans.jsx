@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Typography, Box, Modal, TextField, Button, InputAdornment, TablePagination } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Search as SearchIcon } from '@mui/icons-material';
 import { addDocument, deleteDocument, updateDocument } from '../../../services/firebaseService';
@@ -17,8 +16,6 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
-
-
 function Plans(props) {
     const initialPlan = { title: '', level: '', pricePerMonth: '' };
     const [open, setOpen] = useState(false);

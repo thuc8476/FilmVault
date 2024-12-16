@@ -5,7 +5,6 @@ import ModalDelete from '../../../components/Modaldetele';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
 import Button from '@mui/material/Button';
-import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNotification } from "../../../context/NotificationProvider";
@@ -17,7 +16,6 @@ import UserDialog from './UserDialog';
 function UserPages() {
     const inner = { email: "", username: "", imgUrl: "", password: "", gender: "", phone: "", roleId: "" };
     const [open, setOpen] = useState(false);
-    
     const [account, setAccount] = useState(inner);
     const accounts = useContext(ContextAccounts);
     const [page, setPage] = useState(0);
@@ -126,9 +124,6 @@ function UserPages() {
                     </Button>
                 </div>
                 <div>
-                    <Button onClick={handleOpen} variant="contained" color="primary" startIcon={<AddIcon />}>
-                        Add Accounts
-                    </Button>
 
                     <UserDialog
                         open={open}
@@ -148,6 +143,7 @@ function UserPages() {
                         <TableRow>
                             <TableCell>#</TableCell>
                             <TableCell>Image</TableCell>
+                            <TableCell>fullName</TableCell>
                             <TableCell>Email</TableCell>
                             <TableCell>UserName</TableCell>
                             <TableCell>Password</TableCell>
@@ -168,9 +164,10 @@ function UserPages() {
                                         style={{ width: 50, height: 50, borderRadius: '50%' }}
                                     />
                                 </TableCell>
+                                <TableCell>{row.fullName}</TableCell>
                                 <TableCell>{row.email}</TableCell>
                                 <TableCell>{row.username}</TableCell>
-                                <TableCell>{row.password}</TableCell>
+                                <TableCell>{row.password ? '••••••' : 'Google Account'}</TableCell>
                                 <TableCell>{row.gender}</TableCell>
                                 <TableCell>{row.phone}</TableCell>
                                 <TableCell>{row.roleId}</TableCell>

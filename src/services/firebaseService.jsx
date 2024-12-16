@@ -67,3 +67,4 @@ export const updateDocument = async (collectionName, values, imgUpload, oldImgUr
  }
  await updateDoc(doc(collection(db, collectionName), values.id), updatedValues);
 };
+

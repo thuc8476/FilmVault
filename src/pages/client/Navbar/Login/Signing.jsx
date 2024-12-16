@@ -1,10 +1,10 @@
 import React, { useState, useContext } from "react";
-import { addDocument } from "../../../services/firebaseService";
+import { addDocument } from "../../../../services/firebaseService";
 import { Modal, Box, CircularProgress } from "@mui/material";
-import { ContextAccounts } from "../../../context/AccountProvider";
-import { useNotification } from "../../../context/NotificationProvider";
+import { ContextAccounts } from "../../../../context/AccountProvider";
+import { useNotification } from "../../../../context/NotificationProvider";
 import { AiFillGoogleCircle, AiFillGithub } from "react-icons/ai";
-
+import { ROLES } from "../../../../utils/Constants";
 const modalStyle = {
   position: "absolute",
   top: "50%",
@@ -16,27 +16,39 @@ const modalStyle = {
   p: 4,
   width: "400px",
 };
-const intern = { email: "", username: "", password: "", confirmPassWord: "", imgUrl: "" };
+const intern = { email: "", username: "", password: "", confirmPassWord: "", imgUrl: "",roleId: ROLES.USER };
 function Signing({ signup, setSignup, setOpen }) {
   const [account, setAccount] = useState(intern);
   const [error, setError] = useState(intern);
   const [isLoading, setIsLoading] = useState(false);
   const accounts = useContext(ContextAccounts);
   const showNotification = useNotification();
+
   const validate = () => {
-    const newErrors = { ...error };
-    newErrors.username = account.username ? "" : "Tên đăng nhập là bắt buộc";
+    const newErrors = {};
+
+    if(!account.username.trim()){
+      newErrors.username = "Tên đăng nhập là bắt buộc" ;
+    }else 
+     if(accounts?.some((acc) => acc.username === account.username)) {
+      newErrors.username = "Tên đăng nhập đã tồn tại";
+    }
+    if(!account.email.trim()){
+      newErrors.email = "Email là bắt buộc" ;
+    }else 
+     if(accounts?.some((acc) => acc.email === account.email)) {
+      newErrors.email = "Tên đăng nhập đã tồn tại";
+    }
     newErrors.password = account.password ? "" : "Mật khẩu là bắt buộc";
     newErrors.confirmPassWord =
       account.confirmPassWord === account.password
         ? ""
         : "Xác nhận mật khẩu không khớp";
-    if (accounts?.some((acc) => acc.username === account.username)) {
-      newErrors.username = "Tên đăng nhập đã tồn tại";
-    }
+   
     setError(newErrors);
     return Object.values(newErrors).every((error) => error === "");
   };
+
   const handleSubmit = async () => {
     if (!validate()) return;
     try {
@@ -74,7 +86,8 @@ function Signing({ signup, setSignup, setOpen }) {
     setAccount(intern);
     setError(intern);
   };
-
+  console.log(error);
+  
   return (
     <Modal open={signup} onClose={handleClose}>
       <Box sx={modalStyle}>
@@ -121,8 +134,6 @@ function Signing({ signup, setSignup, setOpen }) {
             />
             {error.password && <p className="mt-1 text-sm text-red-500">{error.password}</p>}
           </div>
-
-
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">Xác nhận mật khẩu</label>
             <input
@@ -135,11 +146,8 @@ function Signing({ signup, setSignup, setOpen }) {
             />
             {error.confirmPassWord && <p className="mt-1 text-sm text-red-500">{error.confirmPassWord}</p>}
           </div>
-
-
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">Ảnh đại diện (Tùy chọn)</label>
-
             <input
               type="file"
               accept="image/*"
@@ -161,7 +169,7 @@ function Signing({ signup, setSignup, setOpen }) {
           <button
             type="button"
             onClick={handleSubmit}
-            className="w-full flex justify-center items-center px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600"
+            className="w-full flex justify-center items-center px-4 py-2 bg-[#FF5733] hover:bg-[#E64A2E] text-white rounded-md transition"
             disabled={isLoading}
           >
             {isLoading ? <CircularProgress size={24} color="inherit" /> : "Đăng Ký"}

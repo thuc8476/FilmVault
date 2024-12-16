@@ -1,14 +1,16 @@
 import React from 'react';
-import SlideShowmovie from '../Slideshow/SlideShowmovie';
 import Slideshow from '../Slideshow/Slideshow';
-import SlideShowmovies from '../Slideshow/SlideShowmovies';
+import HomeContent from '../Slideshow/HomeContent';
+import PremiumFeatures from '../Slideshow/PremiumFeatures';
+import MoviePlans from '../Slideshow/MoviePlans';
 
 function Main(props) {
     return (
         <div>
-            <Slideshow></Slideshow>
-            <SlideShowmovie></SlideShowmovie>
-            <SlideShowmovies/>
+            <Slideshow/>
+            <HomeContent/>
+            <PremiumFeatures/>
+            <MoviePlans/>
         </div>
     );
 }

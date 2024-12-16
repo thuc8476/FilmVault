@@ -1,4 +1,7 @@
 import { FaImages, FaStar, FaUserFriends, FaComments} from 'react-icons/fa';
+import { MdLogout, MdOutlineMovie } from 'react-icons/md';
+import { AiOutlineGift } from 'react-icons/ai';
+import { BiBookContent } from 'react-icons/bi';
 
 export const menu = [
     {
@@ -48,3 +51,31 @@ export const ROLES = {
     MODERATOR: 'moderator', // Quản trị viên cấp trung (người kiểm duyệt)
     USER: 'user',          // Người dùng thông thường
   };
+export  const menuItems = [
+    {
+      icon: <BiBookContent className="text-xl" />,
+      text: "Account",
+      path: "" 
+    },
+    {
+      icon: <MdOutlineMovie className="text-xl" />,
+      text: "Movie Library Management",
+      path: "labrary"
+    },
+    {
+      icon: <BiBookContent className="text-xl" />,
+      text: "Subscription Plan Management",
+      
+      path: "sub"
+    },
+    {
+      icon: <AiOutlineGift className="text-xl" />,
+      text: "Your Offers",
+      path: "offer"
+    },
+    {
+      icon: <MdLogout className="text-xl" />,
+      text: "Logout",
+      action: "logout",  // Add your logout action
+    }
+  ];

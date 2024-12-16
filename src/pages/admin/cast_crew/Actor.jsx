@@ -173,7 +173,12 @@ function Actor() {
                                         <Avatar src={actor.imgUrl || 'https://via.placeholder.com/150'} alt={actor.name} />
                                     </TableCell>
                                     <TableCell>{actor.name}</TableCell>
-                                    <TableCell>{actor.description}</TableCell>
+                                    <TableCell>
+                                        {actor.description.split(" ").length > 10
+                                            ? actor.description.split(" ").slice(0, 10).join(" ") + "..."
+                                            : actor.description}
+                                    </TableCell>
+
                                     <TableCell>
                                         <IconButton onClick={() => handleEditOpen(actor)} color="primary">
                                             <EditIcon />
